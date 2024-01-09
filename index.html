@@ -8,25 +8,45 @@
             var departamento = document.forms["formularioEmpleado"]["departamento"].value;
             var oficio = document.forms["formularioEmpleado"]["oficio"].value;
 
-            // Validación del número de empleado
+            // Validaciones
             if (!/^[1-9]\d{2}$/.test(numero)) {
-                alert("El número de empleado debe ser de 3 dígitos y no empezar con 0.");
+                mostrarMensaje("ER1: El número de empleado no es correcto.");
                 return false;
             }
 
-            // Validación del departamento
             if (departamento !== "" && !/^\d{2}$/.test(departamento)) {
-                alert("El departamento debe estar en blanco o ser un número de dos dígitos.");
+                mostrarMensaje("ER2: El departamento no es correcto.");
                 return false;
             }
 
-            // Validación del oficio
             if (oficio === "Elige oficio") {
-                alert("Por favor, elige un oficio.");
+                mostrarMensaje("ER3: No se ha elegido el oficio.");
                 return false;
             }
 
-            return true; // Formulario validado
+            // Asignación de salario
+            asignarSalario(oficio);
+            return false; // Para prevenir la recarga de la página
+        }
+
+        function mostrarMensaje(mensaje) {
+            document.getElementById("resultado").innerHTML = mensaje;
+        }
+
+        function asignarSalario(oficio) {
+            var salario;
+            switch (oficio) {
+                case "Analista":
+                    salario = 2500;
+                    break;
+                case "Diseñador":
+                    salario = 1500;
+                    break;
+                case "Programador":
+                    salario = 2000;
+                    break;
+            }
+            mostrarMensaje("Salario asignado: $" + salario);
         }
     </script>
 </head>
@@ -49,6 +69,8 @@
 
         <input type="submit" value="Enviar">
     </form>
+
+    <p id="resultado"></p> <!-- Para mostrar el resultado o mensaje de error -->
 
 </body>
 </html>
