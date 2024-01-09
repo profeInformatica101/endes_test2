@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Empleado</title>
+    <script>
+        function validarFormulario() {
+            var numero = document.forms["formularioEmpleado"]["numero"].value;
+            var departamento = document.forms["formularioEmpleado"]["departamento"].value;
+            var oficio = document.forms["formularioEmpleado"]["oficio"].value;
+
+            // Validación del número de empleado
+            if (!/^[1-9]\d{2}$/.test(numero)) {
+                alert("El número de empleado debe ser de 3 dígitos y no empezar con 0.");
+                return false;
+            }
+
+            // Validación del departamento
+            if (departamento !== "" && !/^\d{2}$/.test(departamento)) {
+                alert("El departamento debe estar en blanco o ser un número de dos dígitos.");
+                return false;
+            }
+
+            // Validación del oficio
+            if (oficio === "Elige oficio") {
+                alert("Por favor, elige un oficio.");
+                return false;
+            }
+
+            return true; // Formulario validado
+        }
+    </script>
+</head>
+<body>
+
+    <form name="formularioEmpleado" onsubmit="return validarFormulario()">
+        <label for="numero">Número de Empleado (3 dígitos, no empieza por 0):</label><br>
+        <input type="text" id="numero" name="numero"><br><br>
+
+        <label for="departamento">Departamento (en blanco o número de dos dígitos):</label><br>
+        <input type="text" id="departamento" name="departamento"><br><br>
+
+        <label for="oficio">Oficio:</label><br>
+        <select name="oficio" id="oficio">
+            <option value="Elige oficio">Elige oficio</option>
+            <option value="Analista">Analista</option>
+            <option value="Diseñador">Diseñador</option>
+            <option value="Programador">Programador</option>
+        </select><br><br>
+
+        <input type="submit" value="Enviar">
+    </form>
+
+</body>
+</html>
