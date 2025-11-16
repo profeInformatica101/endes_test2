@@ -1,77 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Formulario de Empleado</title>
-    <script>
-        function validarFormulario() {
-            var numero = document.forms["formularioEmpleado"]["numero"].value;
-            var departamento = document.forms["formularioEmpleado"]["departamento"].value;
-            var oficio = document.forms["formularioEmpleado"]["oficio"].value;
 
-            // Validaciones
-            if (!/^[1-9]\d{2}$/.test(numero)) {
-                mostrarMensaje("ER1: El número de empleado no es correcto.");
-                return false;
-            }
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        .error-msg { color: #dc3545; font-size: 0.9em; }
+        .success-msg { color: #198754; font-size: 1em; font-weight: 500; }
+    </style>
 
-            if (departamento !== "" && !/^\d{2}$/.test(departamento)) {
-                mostrarMensaje("ER2: El departamento no es correcto.");
-                return false;
-            }
-
-            if (oficio === "Elige oficio") {
-                mostrarMensaje("ER3: No se ha elegido el oficio.");
-                return false;
-            }
-
-            // Asignación de salario
-            asignarSalario(oficio);
-            return false; // Para prevenir la recarga de la página
-        }
-
-        function mostrarMensaje(mensaje) {
-            document.getElementById("resultado").innerHTML = mensaje;
-        }
-
-        function asignarSalario(oficio) {
-            var salario;
-            switch (oficio) {
-                case "Analista":
-                    salario = 2500;
-                    break;
-                case "Diseñador":
-                    salario = 1500;
-                    break;
-                case "Programador":
-                    salario = 2000;
-                    break;
-            }
-            mostrarMensaje("Salario asignado: $" + salario);
-        }
-    </script>
 </head>
-<body>
+<body class="bg-light">
 
-    <form name="formularioEmpleado" onsubmit="return validarFormulario()">
-        <label for="numero">Número de Empleado (3 dígitos, no empieza por 0):</label><br>
-        <input type="text" id="numero" name="numero"><br><br>
+<div class="container py-5">
+    <div class="card shadow-sm p-4">
+        <h2 class="mb-4">Formulario de Empleado</h2>
 
-        <label for="departamento">Departamento (en blanco o número de dos dígitos):</label><br>
-        <input type="text" id="departamento" name="departamento"><br><br>
+        <div id="mensajeExito"></div>
 
-        <label for="oficio">Oficio:</label><br>
-        <select name="oficio" id="oficio">
-            <option value="Elige oficio">Elige oficio</option>
-            <option value="Analista">Analista</option>
-            <option value="Diseñador">Diseñador</option>
-            <option value="Programador">Programador</option>
-        </select><br><br>
+        <form id="formularioEmpleado" novalidate>
 
-        <input type="submit" value="Enviar">
-    </form>
+            <!-- Número -->
+            <div class="mb-3">
+                <label for="numero" class="form-label">Número de Empleado</label>
+                <input type="text" class="form-control" id="numero" name="numero">
+                <div id="errorNumero" class="error-msg"></div>
+            </div>
 
-    <p id="resultado"></p> <!-- Para mostrar el resultado o mensaje de error -->
+            <!-- Departamento -->
+            <div class="mb-3">
+                <label for="departamento" class="form-label">Departamento (opcional)</label>
+                <input type="text" class="form-control" id="departamento" name="departamento">
+                <div id="errorDepartamento" class="error-msg"></div>
+            </div>
+
+            <!-- Oficio -->
+            <div class="mb-3">
+                <label for="oficio" class="form-label">Oficio</label>
+                <select class="form-select" id="oficio" name="oficio">
+                    <option value="">Elige oficio</option>
+                    <option value="Analista">Analista</option>
+                    <option value="Diseñador">Diseñador</option>
+                    <option value="Programador">Programador</option>
+                </select>
+                <div id="errorOficio" class="error-msg"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById("formularioEmpleado").addEventListener("submit", function (event) {
+        event.preventDefault();  // Evita el envío inicial
+
+        let valido = true;
+
+        // Limpiar mensajes anteriores
+        document.getElementById("errorNumero").innerText = "";
+        document.getElementById("errorDepartamento").innerText = "";
+        document.getElementById("errorOficio").innerText = "";
+        document.getElementById("mensajeExito").innerHTML = "";
+
+        // Obtener valores
+        const numero = document.getElementById("numero").value.trim();
+        const departamento = document.getElementById("departamento").value.trim();
+        const oficio = document.getElementById("oficio").value;
+
+        // Validar número
+        if (!/^[1-9]\d{2}$/.test(numero)) {
+            document.getElementById("errorNumero").innerText =
+                "Debe tener 3 dígitos y no empezar por 0.";
+            valido = false;
+        }
+
+        // Validar departamento (si no está vacío)
+        if (departamento !== "" && !/^\d{2}$/.test(departamento)) {
+            document.getElementById("errorDepartamento").innerText =
+                "Debe estar en blanco o contener 2 dígitos.";
+            valido = false;
+        }
+
+        // Validar oficio
+        if (oficio === "") {
+            document.getElementById("errorOficio").innerText =
+                "Selecciona un oficio válido.";
+            valido = false;
+        }
+
+        // Si todo es válido → mostrar mensaje, resetear después
+        if (valido) {
+            document.getElementById("mensajeExito").innerHTML = `
+                <div class="alert alert-success">
+                    ✔️ El formulario ha sido validado correctamente.
+                </div>
+            `;
+
+            // Esperar 1.5 segundos antes de resetear
+            setTimeout(() => {
+                document.getElementById("formularioEmpleado").reset();
+            }, 1500);
+        }
+    });
+</script>
 
 </body>
 </html>
-
